@@ -5,7 +5,7 @@ jphraseは、日本語のテキストを文節に分割するためのライブ�
 # Basic Usage
 
 ```Python
-from jphrase import PHraseSplitter
+from jphrase import PhraseSplitter
 splitter = PhraseSplitter()
 print(splitter.split_text("今日はよく寝ました"))
 ```
