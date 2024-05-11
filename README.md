@@ -70,7 +70,13 @@ consider_non_independent_nouns_and_verbs_as_breaks引数は、非自立な名詞
 
 またこれらのオプション引数はPhraseSplitterのインスタンス作成時にも指定することができ、指定した場合は、split_text実行時のデフォルト値として扱われます。
 
-# 分割のルール
+# Testing
+
+```Python
+python tests/test_phrase_splitter.py
+```
+
+# Rule for phrase splitting
 jphraseでは形態素解析結果の品詞情報に基づいて文節の境界を決定します。
 
 ipadicの辞書を用いて形態素解析を行うと、各単語につき、以下の情報が得られます。
