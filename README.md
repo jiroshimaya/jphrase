@@ -1,6 +1,6 @@
 # jphrase
 jphraseは、日本語のテキストを文節に分割するためのライブラリです。
-形態素解析から得られた単語の品詞情報に基づき、ルールベースで文節を決定します、
+形態素解析から得られた単語の品詞情報に基づき、ルールベースで文節を決定します。
 
 # Basic Usage
 
@@ -36,14 +36,14 @@ pip install jphrase
 形態素解析ライブラリと辞書もインストールしてください。
 
 ```
-pip install mecab-python3 ipdaic
+pip install mecab-python3 ipadic
 ```
 
 mecab-python3以外の形態素解析ライブラリ、ipadic以外の辞書には現状非対応です。
 
 # Usage
 
-PhraseSplitterのインスタンスを作成し、split_textメソッドでで分割を実行してください。
+PhraseSplitterのインスタンスを作成し、split_textメソッドで分割を実行してください。
 
 ```Python
 from jphrase import PhraseSplitter
@@ -55,7 +55,7 @@ phrases = splitter.split_text(input_string)
 split_textにオプション引数を渡すことで、出力形式を調整できます。
 
 ```Python
-splitter = split_text(input_string, output_type = PharseSplitter.OUTPUT_SURFACE, consider_non_independent_nouns_and_verbs_as_breaks = True)
+phrases = splitter.split_text(input_string, output_type = PhraseSplitter.OUTPUT_SURFACE, consider_non_independent_nouns_and_verbs_as_breaks = True)
 ```
 
 output_type引数は、PhraseSplitterクラスのsplit_textメソッドの出力形式を指定するために使用されます。利用可能な出力形式は以下の通りです:
@@ -66,7 +66,7 @@ output_type引数は、PhraseSplitterクラスのsplit_textメソッドの出力
 
 output_type引数を指定しない場合、デフォルトの出力形式は`PhraseSplitter.OUTPUT_SURFACE`です。
 
-consider_non_independent_nouns_and_verbs_as_breaks引数は、非自立な名詞や動詞を文節の区切りとして扱うかどうかを制御します。この引数がTrueに設定されている場合、非自立な名刺や動詞の前で新しい文節が始まります。Falseの場合、非自立な名詞や動詞は前の文節に含まれ続けます。
+consider_non_independent_nouns_and_verbs_as_breaks引数は、非自立な名詞や動詞を文節の区切りとして扱うかどうかを制御します。この引数がTrueに設定されている場合、非自立な名詞や動詞の前で新しい文節が始まります。Falseの場合、非自立な名詞や動詞は前の文節に含まれ続けます。
 
 またこれらのオプション引数はPhraseSplitterのインスタンス作成時にも指定することができ、指定した場合は、split_text実行時のデフォルト値として扱われます。
 
@@ -93,7 +93,7 @@ ipadicの辞書を用いて形態素解析を行うと、各単語につき、�
 |接尾辞|「痛さ」の「さ」など|品詞が「名詞」かつ品詞細分類に「接尾」が含まれている|
 |接頭詞の直後の単語|「お美しい」の「美しい」など（「お」が接頭詞）|直前の単語の品詞が「接頭詞」である|
 |サ変接続名詞の直後のサ変接続動詞|「勉強する」の「する」など|品詞が「動詞」、かつ、活用型が「サ変・スル」、かつ、直前の単語の品詞細分類に「サ変接続」が含まれている（注１）|
-|非自立な名詞（注２）|動詞や形容詞などの直後の「もの」「こと」や、「やったのか？」の(「もの・こと」という意味の）「の」など|品詞が「名詞」かつ品詞細分類に「非自立」が含まれている|
+|非自立な名詞（注２）|動詞や形容詞などの直後の「もの」「こと」や、「やったのか？」の「もの・こと」という意味の「の」など|品詞が「名詞」かつ品詞細分類に「非自立」が含まれている|
 |非自立な動詞（注２）|「やっている」の「いる」など|品詞が「動詞」かつ品詞細分類に「非自立」が含まれている|
 
 注１：辞書によっては、記号が「サ変接続」になって、その周辺の処理の精度が悪くなることがあるので注意。
@@ -106,3 +106,4 @@ ipadicの辞書を用いて形態素解析を行うと、各単語につき、�
 
 jphraseはMITライセンスの下で公開されています。
 ただし、jphraseを使用する際に必要となる追加のライブラリや辞書は、それぞれのライセンス条項に従ってください。
+

@@ -53,6 +53,8 @@ class PhraseSplitter:
             return False
                     
         phrase_break_pos_tags = ['名詞', '動詞', '接頭詞', '副詞', '感動詞', '形容詞', '形容動詞', '連体詞']
+        open_bra = '「『（【｛〈《〘〚)]}'
+        close_bra = '」』）】｝〉》〙〗)]}'
         
         pos_info = token['pos']
         pos_detail = ','.join([token['pos_detail_1'], token['pos_detail_2'], token['pos_detail_3']])
@@ -62,15 +64,15 @@ class PhraseSplitter:
         previous_pos_detail = ','.join([previous_token['pos_detail_1'], previous_token['pos_detail_2'], previous_token['pos_detail_3']])
 
 
-        if pos_info == '記号':
+        if pos_info == '記号' and token['surface_form'] not in open_bra:
             return False
         
-        is_phrase_break_pos = pos_info in phrase_break_pos_tags
+        is_phrase_break_pos = pos_info in phrase_break_pos_tags or token['surface_form'] in open_bra
         if not consider_non_independent_nouns_and_verbs_as_breaks and '非自立' in pos_detail:
             is_phrase_break_pos = False
 
         if is_phrase_break_pos:
-            if previous_pos_info == '接頭詞':
+            if previous_pos_info == '接頭詞' or previous_token['surface_form'] in open_bra:
                 return False
             elif '接尾' in pos_detail:
                 return False
@@ -79,7 +81,7 @@ class PhraseSplitter:
                         
             return True
         else:
-            if previous_pos_info == '記号' and previous_token['surface_form'] not in '」』）】｝〉》〙〗)]}':
+            if previous_pos_info == '記号' and previous_token['surface_form'] not in close_bra:
                 return True
             
             return False
@@ -134,4 +136,6 @@ class PhraseSplitter:
         else:
             valid_types = ', '.join(split_methods.keys())
             raise ValueError(f"Invalid output type specified. Choose {valid_types}.")
-
+        
+if __name__=='__main__':
+    print(PhraseSplitter().split_text('「て。」や「に」などの'))
