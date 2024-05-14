@@ -1,2 +1,3 @@
 mecab-python3
 ipadic
+pytest

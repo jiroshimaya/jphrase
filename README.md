@@ -73,7 +73,9 @@ consider_non_independent_nouns_and_verbs_as_breaks引数は、非自立な名詞
 # Testing
 
 ```Python
-python tests/test_phrase_splitter.py
+pip install -r requirements.txt
+pip install -e .
+pytest
 ```
 
 # Rule for phrase splitting
