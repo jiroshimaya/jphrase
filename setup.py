@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="jphrase",  # PyPIに登録するパッケージ名
-    version="0.0.2",
+    version="0.0.3",
     packages=find_packages(where='src'),  # パッケージはsrcディレクトリ内にある
     package_dir={'': 'src'},  # パッケージのルートディレクトリをsrcに設定
     install_requires=[],
