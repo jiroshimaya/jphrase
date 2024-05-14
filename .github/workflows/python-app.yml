@@ -28,4 +28,4 @@ jobs:
 
     - name: Run tests
       run: |
-        python tests/test_phrase_splitter.py
+        pytest
