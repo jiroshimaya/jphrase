@@ -1,3 +1,5 @@
+import MeCab
+
 class PhraseSplitter:
     OUTPUT_SURFACE = "surface"
     OUTPUT_DETAILED = "detailed"
@@ -5,10 +7,16 @@ class PhraseSplitter:
 
     def __init__(
         self,
-        output_type=OUTPUT_SURFACE,
-        consider_non_independent_nouns_and_verbs_as_breaks=True,
+        output_type: str = OUTPUT_SURFACE,
+        consider_non_independent_nouns_and_verbs_as_breaks: bool = True,
     ):
-        import MeCab
+        """
+        PhraseSplitterの初期化。
+
+        Args:
+            output_type (str): 出力タイプ。surface/detailed/concatenated。
+            consider_non_independent_nouns_and_verbs_as_breaks (bool): 非自立語・動詞を分割点とみなすか。
+        """
         import ipadic
 
         self.__tokenize = self.create_tokenizer_from_mecab_ipadic(
@@ -19,7 +27,16 @@ class PhraseSplitter:
             consider_non_independent_nouns_and_verbs_as_breaks
         )
 
-    def create_tokenizer_from_mecab_ipadic(self, tagger) -> callable:
+    def create_tokenizer_from_mecab_ipadic(self, tagger: MeCab.Tagger) -> callable:
+        """
+        MeCabのTaggerからトークナイザー関数を生成。
+
+        Args:
+            tagger (MeCab.Tagger): MeCabのTaggerインスタンス。
+
+        Returns:
+            callable: 文字列を受け取りlist[dict]を返すトークナイザー関数。
+        """
         def tokenize(text: str) -> list[dict]:
             mecab_result = tagger.parse(text).splitlines()
             mecab_result = mecab_result[
@@ -53,6 +70,15 @@ class PhraseSplitter:
 
     # This method is intended to be replaced by the tokenizer defined in __init__, so it is left empty here.
     def __tokenize(self, text: str) -> list[dict]:
+        """
+        テキストをトークン化する（ダミー、実装なし）。
+
+        Args:
+            text (str): 入力テキスト。
+
+        Returns:
+            list[dict]: トークンのリスト。
+        """
         pass
 
     def __should_break_before_token(
@@ -61,6 +87,17 @@ class PhraseSplitter:
         current_phrase: list[dict],
         consider_non_independent_nouns_and_verbs_as_breaks: bool = True,
     ) -> bool:
+        """
+        現在のトークンの前でフレーズを分割すべきか判定。
+
+        Args:
+            token (dict): 現在のトークン。
+            current_phrase (list[dict]): 現在のフレーズ。
+            consider_non_independent_nouns_and_verbs_as_breaks (bool): 非自立語・動詞を分割点とみなすか。
+
+        Returns:
+            bool: 分割すべきならTrue。
+        """
         if not current_phrase:
             return False
         if all(_token["pos"] == "記号" for _token in current_phrase):
@@ -135,6 +172,16 @@ class PhraseSplitter:
     def __split_text_into_detailed_phrases(
         self, text: str, consider_non_independent_nouns_and_verbs_as_breaks: bool = True
     ) -> list[list[dict]]:
+        """
+        テキストを詳細なフレーズ単位に分割。
+
+        Args:
+            text (str): 入力テキスト。
+            consider_non_independent_nouns_and_verbs_as_breaks (bool): 非自立語・動詞を分割点とみなすか。
+
+        Returns:
+            list[list[dict]]: フレーズごとのトークンリスト。
+        """
         tokens = self.__tokenize(text)
         segmented_text = []
         current_phrase = []
@@ -158,6 +205,16 @@ class PhraseSplitter:
     def __split_text_into_surface_phrases(
         self, text: str, consider_non_independent_nouns_and_verbs_as_breaks: bool = True
     ) -> list[str]:
+        """
+        テキストを表層フレーズ単位に分割。
+
+        Args:
+            text (str): 入力テキスト。
+            consider_non_independent_nouns_and_verbs_as_breaks (bool): 非自立語・動詞を分割点とみなすか。
+
+        Returns:
+            list[str]: フレーズごとの文字列リスト。
+        """
         detailed_phrases = self.__split_text_into_detailed_phrases(
             text, consider_non_independent_nouns_and_verbs_as_breaks
         )
@@ -170,6 +227,16 @@ class PhraseSplitter:
     def __split_text_into_concatenated_phrases(
         self, text: str, consider_non_independent_nouns_and_verbs_as_breaks: bool = True
     ) -> list[dict]:
+        """
+        テキストを連結フレーズ単位に分割。
+
+        Args:
+            text (str): 入力テキスト。
+            consider_non_independent_nouns_and_verbs_as_breaks (bool): 非自立語・動詞を分割点とみなすか。
+
+        Returns:
+            list[dict]: フレーズごとの情報（surface_form, pronunciation, reading）。
+        """
         detailed_phrases = self.__split_text_into_detailed_phrases(
             text, consider_non_independent_nouns_and_verbs_as_breaks
         )
@@ -196,7 +263,18 @@ class PhraseSplitter:
         text: str,
         output_type: str = None,
         consider_non_independent_nouns_and_verbs_as_breaks: bool = None,
-    ):
+    ) -> list | list[list[dict]] | list[dict]:
+        """
+        テキストを指定した出力形式で分割。
+
+        Args:
+            text (str): 入力テキスト。
+            output_type (str, optional): 出力タイプ。surface/detailed/concatenated。
+            consider_non_independent_nouns_and_verbs_as_breaks (bool, optional): 非自立語・動詞を分割点とみなすか。
+
+        Returns:
+            list | list[list[dict]] | list[dict]: 指定形式の分割結果。
+        """
         if consider_non_independent_nouns_and_verbs_as_breaks is None:
             consider_non_independent_nouns_and_verbs_as_breaks = (
                 self.consider_non_independent_nouns_and_verbs_as_breaks
