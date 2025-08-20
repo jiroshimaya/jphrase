@@ -1,0 +1,45 @@
+[project]
+name = "jphrase"
+dynamic = ["version"]
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "shimajiroxyz", email = "shimajiroxyz@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "pytest>=8.4.1",
+]
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.pytest.ini_options]
+addopts = "-m 'not workflow'"
+markers = [
+    "workflow: Marker indicating tests related to github actions workflows",
+]
+
+[tool.taskipy.tasks]
+test = "pytest" 
+lint = "uvx ruff check ."    
+format = "uvx ruff format ."
+# MYPKGはプロジェクト名に置き換えてください
+docs-generate = "sphinx-apidoc -f -o docs/source src/jphrase && sphinx-build -M clean docs/source docs/build && sphinx-build -M html docs/source docs/build"
+docs-open = "open docs/build/html/index.html"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.3",
+    "sphinx-rtd-theme>=3.0.2",
+    "sphinx>=8.2.3",
+    "taskipy>=1.13.0",
+    "autodoc-pydantic>=2.2.0",
+    "tomlkit>=0.13.2",
+    "mecab-python3>=1.0.10",
+    "ipadic>=1.0.0",
+]
