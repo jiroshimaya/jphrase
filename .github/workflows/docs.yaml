@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           # pyproject.toml以外の依存関係があればここでインストールする
-          pass
+          echo "No additional dependencies to install"
       - name: Build documentation
         run: |
           uv run task docs-generate
