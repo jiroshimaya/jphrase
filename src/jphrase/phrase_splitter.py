@@ -1,5 +1,6 @@
 import MeCab
 
+
 class PhraseSplitter:
     OUTPUT_SURFACE = "surface"
     OUTPUT_DETAILED = "detailed"
@@ -37,6 +38,7 @@ class PhraseSplitter:
         Returns:
             callable: 文字列を受け取りlist[dict]を返すトークナイザー関数。
         """
+
         def tokenize(text: str) -> list[dict]:
             mecab_result = tagger.parse(text).splitlines()
             mecab_result = mecab_result[
