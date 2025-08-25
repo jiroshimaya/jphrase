@@ -30,13 +30,13 @@ for phrase in phrases:
 # Installation
 
 ```
-pip install jphrase
+uv add jphrase
 ```
 
 形態素解析ライブラリと辞書もインストールしてください。
 
 ```
-pip install mecab-python3 ipadic
+uv add mecab-python3 ipadic
 ```
 
 mecab-python3以外の形態素解析ライブラリ、ipadic以外の辞書には現状非対応です。
@@ -73,9 +73,8 @@ consider_non_independent_nouns_and_verbs_as_breaks引数は、非自立な名詞
 # Testing
 
 ```Python
-pip install -r requirements.txt
-pip install -e .
-pytest
+uv sync --dev
+uv run pytest
 ```
 
 # Rule for phrase splitting
