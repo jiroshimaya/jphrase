@@ -158,6 +158,13 @@ class PhraseSplitter:
                 and "サ変接続" in previous_pos_detail
             ):
                 return False
+            elif (
+                token["pos_detail_1"] == "数" or token["surface_form"] in (".", "．")
+            ) and (
+                previous_token["pos_detail_1"] == "数"
+                or previous_token["surface_form"] in (".", "．")
+            ):
+                return False
 
             return True
         else:

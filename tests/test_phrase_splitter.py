@@ -28,6 +28,75 @@ def base_cases():
     ]
 
 
+class TestPhraseSplitterSplitText:
+    def test_正常系_数字とドットの連続を分割しない(self, splitter):
+        input_string = "123.4．5"
+        expected = ["123.4．5"]
+        result = splitter.split_text(
+            input_string,
+            output_type=PhraseSplitter.OUTPUT_SURFACE,
+            consider_non_independent_nouns_and_verbs_as_breaks=True,
+        )
+        assert result == expected
+
+    def test_正常系_接尾辞と接頭辞(self, splitter):
+        test_cases = [
+            ["痛さを", ["痛さを"]],  # 接尾辞
+            ["ご丁寧に", ["ご丁寧に"]],  # 接頭辞
+        ]
+        for input_string, expected in test_cases:
+            result = splitter.split_text(
+                input_string,
+                output_type=PhraseSplitter.OUTPUT_SURFACE,
+                consider_non_independent_nouns_and_verbs_as_breaks=True,
+            )
+            assert result == expected
+
+    def test_正常系_サ変接続(self, splitter):
+        test_cases = [
+            ["勉強する", ["勉強する"]],  # サ変接続名詞+サ変
+            ["abcする", ["abc", "する"]],  # Unknown名詞+サ変
+            ["違うする", ["違う", "する"]],  # 名詞以外+サ変
+        ]
+        for input_string, expected in test_cases:
+            result = splitter.split_text(
+                input_string,
+                output_type=PhraseSplitter.OUTPUT_SURFACE,
+                consider_non_independent_nouns_and_verbs_as_breaks=True,
+            )
+            assert result == expected
+
+    def test_正常系_文頭は助詞でも文節区切りになる(self, splitter):
+        input_string = "はが"
+        expected = ["はが"]
+        result = splitter.split_text(
+            input_string,
+            output_type=PhraseSplitter.OUTPUT_SURFACE,
+            consider_non_independent_nouns_and_verbs_as_breaks=True,
+        )
+        assert result == expected
+
+    def test_正常系_記号(self, splitter):
+        test_cases = [
+            ["「あなたは、『どこ』？」", ["「あなたは、", "『どこ』？」"]],  # 記号
+            [
+                "て、に、を、はなどの",
+                ["て、", "に、", "を、", "はなどの"],
+            ],  # 記号直後の助詞
+            [
+                "「て。」や「に」などの",
+                ["「て。」や", "「に」などの"],
+            ],  # 対応するカッコ直後の助詞は文節の区切りとしない
+        ]
+        for input_string, expected in test_cases:
+            result = splitter.split_text(
+                input_string,
+                output_type=PhraseSplitter.OUTPUT_SURFACE,
+                consider_non_independent_nouns_and_verbs_as_breaks=True,
+            )
+            assert result == expected
+
+
 def test_split_text_surface_true(splitter, base_cases):
     specific_cases = [
         [
